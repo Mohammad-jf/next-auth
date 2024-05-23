@@ -1,6 +1,4 @@
-import { verify } from 'jsonwebtoken';
-
-const { hash, compare, genSalt } = require('bcryptjs');
+import { compare, genSalt, hash } from 'bcrypt';
 
 async function hashPassword(password) {
   const salt = await genSalt(10);
