@@ -15,7 +15,7 @@ const Register = () => {
     // }, []);
 
     const saveHandler = async () => {
-        const res = await fetch('/api/users/signup', {
+        const res = await fetch('/api/auth/signup', {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: { "Content-Type": 'application/json' }
