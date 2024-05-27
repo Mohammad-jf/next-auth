@@ -1,20 +1,29 @@
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react"
+import { getSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 
+const DashBoard = ({ data }) => {
+    // const { data, status } = useSession();
+    const router = useRouter();
+    const [user, setUser] = useState({
+        name: '',
+        lastName: '',
+    });
 
-const DashBoard = () => {
     const [formData, setFormData] = useState({
         name: '',
         lastName: '',
         password: ''
     })
 
-    const [user, setUser] = useState({
-        name: '',
-        lastName: '',
-        email: ''
-    })
-
+    // useEffect(() => {
+    //     if (!data) {
+    //         router.replace('/users/signIn');
+    //     }
+    // }, [])
 
     const changeHandler = (e) => {
         setFormData({
@@ -24,34 +33,13 @@ const DashBoard = () => {
     }
 
     const saveHandler = async () => {
-        if (formData.name && formData.lastName && formData.password) {
-            const res = await fetch('/api/users/updateuser', {
-                method: "POST",
-                body: JSON.stringify({ data: formData }),
-                headers: { 'Content-Type': 'application/json' }
 
-            });
-
-            const data = await res.json();
-            console.log(data);
-            if (data.status === 'success') {
-                setUser({
-                    name: data.user.name,
-                    lastName: data.user.lastName,
-                    email: data.user.email
-                })
-            }
-        }
-        setFormData({
-            name: '',
-            lastName: '',
-            password: ''
-        })
     }
+
 
     return (
         <>
-            <h3>Email: </h3>
+            <h3>Email: {data.user.email} </h3>
             {user.name && <h3>Name: {user.name}</h3>}
             {user.lastName && <h3>LastName: {user.lastName}</h3>}
 
@@ -88,20 +76,18 @@ const DashBoard = () => {
 export default DashBoard
 
 
-// export async function getServerSideProps(context) {
-//     const { token } = context.req.cookies;
-//     const secretKey = process.env.SECRET_KEY;
-//     const tokenVerifyResult = verifyToken(token, secretKey);
+export async function getServerSideProps({ req }) {
+    const session = await getSession({ req });
 
-//     if (!tokenVerifyResult) {
-//         return {
-//             redirect: { destination: '/users/signIn', premanant: false }
-//         }
-//     }
+    if (!session) {
+        return {
+            redirect: { destination: '/users/signIn', permanant: false },
+        }
+    }
 
-//     return {
-//         props: {
-//             data: tokenVerifyResult.email
-//         }
-//     }
-// }
+    return {
+        props: {
+            data: session
+        }
+    }
+}

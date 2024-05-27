@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react'
 
@@ -5,14 +6,14 @@ const Register = () => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { status } = useSession();
 
-    // useEffect(() => {
-    //     fetch('/api/user').then((res) => res.json()).then((data) => {
-    //         if (data.status === 'success') {
-    //             window.location.href = '/dashboard'
-    //         }
-    //     })
-    // }, []);
+    useEffect(() => {
+        if (status === 'authenticated') {
+            router.replace('/dashboard')
+        }
+
+    }, []);
 
     const saveHandler = async () => {
         const res = await fetch('/api/auth/signup', {

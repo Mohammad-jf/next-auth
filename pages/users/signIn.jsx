@@ -1,19 +1,19 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 const SignIn = () => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { status } = useSession();
 
-    // useEffect(() => {
-    //     fetch('/api/user').then((res) => res.json()).then((data) => {
-    //         if (data.status === 'success') {
-    //             window.location.href = '/dashboard'
-    //         }
-    //     })
-    // }, []);
+
+    useEffect(() => {
+        if (status === 'authenticated') {
+            router.replace('/dashboard')
+        }
+    }, []);
 
     const signInHandler = async () => {
         const res = await signIn('credentials', {
@@ -23,7 +23,9 @@ const SignIn = () => {
 
         })
 
-        console.log(res)
+        if (res.status === 200) {
+            router.replace('/dashboard');
+        }
         setEmail('')
         setPassword('')
     }

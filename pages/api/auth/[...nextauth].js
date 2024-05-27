@@ -47,6 +47,7 @@ const authOptions = {
       },
     }),
   ],
+  
   //   pages: {
   //     signIn: '/users/signIn',
   //   },
