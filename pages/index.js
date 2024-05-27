@@ -1,34 +1,28 @@
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(isLogged);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { status } = useSession();
 
   const signOutHandler = async () => {
-    const res = await fetch('/api/users/signout', {
-      method: 'DELETE',
-    });
-    const data = await res.json();
-    console.log(data)
-    // setIsLoggedIn(false);
+    await signOut();
+    setIsLoggedIn(false);
   };
 
-  // useEffect(() => {
-  //   fetch('/api/user')
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (data.status === 'success') {
-  //         setIsLoggedIn(true);
-  //       } else {
-  //         setIsLoggedIn(false);
-  //       }
-  //     });
-  // }, []);
+  useEffect(() => {
+    if (status === 'authenticated') {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   return (
     <>
       <h3>Authentication In Next.js Applications</h3>
-      {/* <div className='btn-group'>
+      <div className='btn-group'>
         {isLoggedIn && (
           <>
             <Link href='/dashboard'>
@@ -50,9 +44,9 @@ export default function Home() {
             </Link>
           </>
         )}
-      </div> */}
+      </div>
 
-      <div className="btn-group">
+      {/* <div className='btn-group'>
         <Link href='/dashboard'>
           <button className='btn'>Dashboard</button>
         </Link>
@@ -66,7 +60,7 @@ export default function Home() {
         <Link href='/users/signIn'>
           <button className='btn'>Sign In</button>
         </Link>
-      </div>
+      </div> */}
     </>
   );
 }
