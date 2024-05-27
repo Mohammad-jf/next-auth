@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
+import { signIn } from 'next-auth/react';
 
 const SignIn = () => {
     const router = useRouter();
@@ -15,18 +15,15 @@ const SignIn = () => {
     //     })
     // }, []);
 
-    const saveHandler = async () => {
-        const res = await fetch('/api/auth/signIn', {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: { "Content-Type": 'application/json' }
-        });
+    const signInHandler = async () => {
+        const res = await signIn('credentials', {
+            email,
+            password,
+            redirect: false,
 
-        const data = await res.json();
-        console.log(data);
-        // if (data.status === 'success') {
-        //     router.push('/dashboard')
-        // }
+        })
+
+        console.log(res)
         setEmail('')
         setPassword('')
     }
@@ -53,7 +50,7 @@ const SignIn = () => {
 
             </div>
 
-            <button className='btn' onClick={() => signIn()}>Sign In</button>
+            <button className='btn' onClick={signInHandler}>Sign In</button>
         </div>
     )
 }
