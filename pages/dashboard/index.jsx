@@ -33,7 +33,26 @@ const DashBoard = ({ data }) => {
     }
 
     const saveHandler = async () => {
+        const res = await fetch('/api/auth/update-info', {
+            method: "POST",
+            body: JSON.stringify({ ...formData }),
+            headers: { "Content-Type": "application/json" }
+        });
 
+        const data = await res.json();
+        console.log(data)
+        if (data.status === 'success') {
+            setUser({
+                name: data.user.name,
+                lastName: data.user.lastName
+            })
+        }
+
+        setFormData({
+            name: '',
+            lastName: '',
+            password: ''
+        })
     }
 
 
