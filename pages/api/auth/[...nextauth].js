@@ -43,11 +43,12 @@ const authOptions = {
           throw new Error('email or password is wrong');
         }
 
+        // use to create token
         return { email };
       },
     }),
   ],
-  
+
   //   pages: {
   //     signIn: '/users/signIn',
   //   },
